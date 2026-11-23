@@ -1,0 +1,34 @@
+<Project>
+  <!-- Native AOT needs a concrete RID; the 'any' tool package is the framework-dependent fallback for platforms without a native package -->
+  <PropertyGroup Condition="'$(RuntimeIdentifier)' == 'any'">
+    <PublishAot>false</PublishAot>
+    <PublishTrimmed>false</PublishTrimmed>
+    <SelfContained>false</SelfContained>
+  </PropertyGroup>
+  <!-- Native AOT: managed symbols of referenced assemblies are useless next to the native binary, keep them out of the tool package -->
+  <Target Name="_RemoveManagedSymbolsFromPublish" AfterTargets="ComputeResolvedFilesToPublishList" Condition="'$(PublishAot)' == 'true'">
+    <ItemGroup>
+      <ResolvedFileToPublish Remove="@(ResolvedFileToPublish)" Condition="'%(Extension)' == '.pdb'" />
+    </ItemGroup>
+  </Target>
+  <!-- With PublishAot the SDK's default only packs the host RID and silently skips the rest (including 'any'), so every listed RID is requested explicitly -->
+  <Target Name="_SelectToolPackageRuntimeIdentifiers" BeforeTargets="ComputeToolPackageRuntimeIdentifiersToPack" Condition="'$(RuntimeIdentifier)' == '' AND '$(CreateRidSpecificToolPackages)' == 'true'">
+    <ItemGroup>
+      <ToolPackageRuntimeIdentifiersToPack Include="$(ToolPackageRuntimeIdentifiers)" />
+    </ItemGroup>
+  </Target>
+  <!-- The pointer package names every RID in ToolPackageRuntimeIdentifiers; installs fail on any RID whose package was not built alongside it -->
+  <Target Name="_VerifyToolRidPackagesBuilt" AfterTargets="Pack" Condition="'$(RuntimeIdentifier)' == '' AND '$(CreateRidSpecificToolPackages)' == 'true'">
+    <PropertyGroup>
+      <_ToolPackageDirectory>$([MSBuild]::NormalizeDirectory('$(MSBuildProjectDirectory)', '$(PackageOutputPath)'))</_ToolPackageDirectory>
+    </PropertyGroup>
+    <ItemGroup>
+      <_ListedToolRid Include="$(ToolPackageRuntimeIdentifiers)" />
+      <_ListedToolRid>
+        <ExpectedPackage>$(_ToolPackageDirectory)$(PackageId).%(Identity).$(PackageVersion).nupkg</ExpectedPackage>
+      </_ListedToolRid>
+      <_MissingToolRid Include="@(_ListedToolRid)" Condition="!Exists('%(ExpectedPackage)')" />
+    </ItemGroup>
+    <Error Condition="'%(_MissingToolRid.Identity)' != ''" Text="Pointer tool package $(PackageId) lists RID '%(_MissingToolRid.Identity)' but its RID package was not built: %(_MissingToolRid.ExpectedPackage)" />
+  </Target>
+</Project>
