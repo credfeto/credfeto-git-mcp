@@ -4,8 +4,8 @@ using System.Text.Json;
 using System.Threading;
 using System.Threading.Tasks;
 using Credfeto.Git.Mcp.Git;
+using Credfeto.Git.Mcp.History;
 using Credfeto.Git.Mcp.Json;
-using Credfeto.Git.Mcp.Log;
 using Credfeto.Git.Mcp.Models;
 
 namespace Credfeto.Git.Mcp.Tools;
