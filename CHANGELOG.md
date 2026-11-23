@@ -11,6 +11,7 @@ Please ADD ALL Changes to the UNRELEASED SECTION and not a specific release
 ## [Unreleased]
 ### Security
 ### Added
+- git MCP server (credfeto-git-mcp) with read-only status, diff, log and fetch tools that take no free-form refs, paths or options; tools/list sorted by name
 ### Fixed
 ### Changed
 ### Deprecated
