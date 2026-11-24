@@ -44,6 +44,14 @@
   color: "d8bb50"
   description: "Configuration files changes"
 
+- name: "credfeto-git-mcp"
+  color: "96f7d2"
+  description: "Changes in Credfeto.Git.Mcp project"
+
+- name: "credfeto-git-mcp-tests"
+  color: "0e8a16"
+  description: "Changes in Credfeto.Git.Mcp.Tests project"
+
 - name: "dependencies"
   color: "0366d6"
   description: "Updates to dependencies"

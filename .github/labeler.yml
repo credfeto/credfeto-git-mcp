@@ -12,6 +12,10 @@
   - any: ['CHANGELOG.md']
 "Config Change":
   - any: ['src/**/*.json', '!src/global.json']
+"credfeto-git-mcp":
+  - any: ['src/Credfeto.Git.Mcp/**/*']
+"credfeto-git-mcp-tests":
+  - any: ['src/Credfeto.Git.Mcp.Tests/**/*']
 "dotnet":
   - any: ['src/**/*.csproj']
 "Editorconfig":
